@@ -4,6 +4,8 @@ import cors from 'cors'
 import nocache from "nocache";
 import cookieParser from 'cookie-parser'
 import { Request, Response } from 'express'
+import { connectDb } from "./config/dbConfig";
+import userRouter from "./routes/userRoutes";
 
 
 dotenv.config()
@@ -12,7 +14,7 @@ const app = express()
 
 const port = process.env.PORT || 5500
 
-// connectDb()
+connectDb()
 
 const corsOptions = {
     origin: process?.env?.FRONT_END_URL,
@@ -27,6 +29,7 @@ app.use(nocache())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.use('/user', userRouter)
 
 app.use((req: Request, res: Response) => {
     res.status(404).json({ message: 'Not found' })

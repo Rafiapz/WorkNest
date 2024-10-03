@@ -1,17 +1,16 @@
-import React, { useState } from "react";
 import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { handleModal } from "../store/slices/userSlice";
+import { handleAddModal } from "../store/slices/userSlice";
 import TaskForm from "./TaskForm";
 
 const DraggableModal = () => {
-   const isOpen = useSelector((state: RootState) => state?.user?.modal?.isOpen);
+   const isOpen = useSelector((state: RootState) => state?.user?.addModal?.isOpen);
 
    const dispatch = useDispatch<AppDispatch>();
 
    const closeModal = () => {
-      dispatch(handleModal(false));
+      dispatch(handleAddModal(false));
    };
 
    return (
@@ -26,7 +25,6 @@ const DraggableModal = () => {
                            &times;
                         </button>
                      </div>
-
                      <div className="mt-4 ">
                         <TaskForm />
                      </div>

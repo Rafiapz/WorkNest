@@ -12,8 +12,8 @@ export const signupController = async (req: Request, res: Response) => {
         if (error) {
             throw new Error(error?.message)
         }
-
         value.password = await hashPassword(value.password)
+        console.log(value)
         const data = await Users.create(value)
         if (!data) {
             throw Error('Failed to signup')
@@ -63,6 +63,27 @@ export const fetchUserController = async (req: Request, res: Response) => {
         const data = await Users.findOne({ email })
         res.status(200).json({ status: 'success', data, isAuthenticated: true })
 
+    } catch (error: any) {
+        res.status(500).json({ status: 'error', message: error?.message || 'internal server error' })
+    }
+}
+
+export const fetchManagersController = async (req: Request, res: Response) => {
+    try {
+
+        const data = await Users.find({ role: 'manager' }, { fullName: 1, _id: 1 })
+        res.status(200).json({ status: 'success', data })
+    } catch (error: any) {
+        res.status(500).json({ status: 'error', message: error?.message || 'internal server error' })
+    }
+}
+
+export const fetchEmployeesController = async (req: Request, res: Response) => {
+    try {
+
+        const id = req?.params?.id;
+        const data = await Users.find({ managerId: id })
+        res.status(200).json({ status: 'success', data })
     } catch (error: any) {
         res.status(500).json({ status: 'error', message: error?.message || 'internal server error' })
     }

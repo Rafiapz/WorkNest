@@ -1,4 +1,5 @@
 import DraggableModal from "../../components/DraggableModal";
+import EditTask from "../../components/EditTask";
 import MyCalendar from "../../components/MyCalendar";
 
 const HomePage = () => {
@@ -6,6 +7,7 @@ const HomePage = () => {
       <div>
          <MyCalendar />
          <DraggableModal />
+         <EditTask />
       </div>
    );
 };

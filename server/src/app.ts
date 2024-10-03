@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import { Request, Response } from 'express'
 import { connectDb } from "./config/dbConfig";
 import userRouter from "./routes/userRoutes";
+import taskRouter from './routes/taskRoutes'
 
 
 dotenv.config()
@@ -30,6 +31,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/user', userRouter)
+
+app.use('/task', taskRouter)
 
 app.use((req: Request, res: Response) => {
     res.status(404).json({ message: 'Not found' })

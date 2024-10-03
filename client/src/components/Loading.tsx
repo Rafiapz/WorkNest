@@ -6,7 +6,7 @@ const Loading: FC<any> = ({ width }) => {
          <button
             disabled
             type="button"
-            className={`text-white bg-blue-500  justify-center hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-600 inline-flex items-center ${width}`}
+            className={`text-white bg-green-400  justify-center hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium  text-sm px-5 py-2.5 text-center me-2 dark:bg-green-400 dark:hover:bg-green-500 dark:focus:ring-green-500 inline-flex items-center ${width}`}
          >
             <svg
                aria-hidden="true"

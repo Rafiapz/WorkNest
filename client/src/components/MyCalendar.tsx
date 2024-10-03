@@ -1,58 +1,103 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
-import { handleModal } from "../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { handleAddModal, handleEditModal, handleSelectedDate } from "../store/slices/userSlice";
+import { fetchMyTasks } from "../store/actions/userActions";
+import TaskView from "./TaskView";
+import toast from "react-hot-toast";
+import { deleteTask } from "../service/api";
 
 const localizer = momentLocalizer(moment);
 
 const MyCalendar = () => {
-   const [selectedDate, setSelectedDate] = useState(null);
-   const [events, setEvents] = useState([
-      {
-         title: "Task 1",
-         start: new Date(),
-         end: new Date(moment().add(1, "hours").toDate()),
-      },
-   ]);
+   const selectedDate = useSelector((state: RootState) => state?.user?.selectedDate);
+   // const isLoading = useSelector((state: RootState) => state?.user?.myTasks?.loading);
+   const events: any = useSelector((state: RootState) => state?.user?.myTasks?.data);
+   const userData: any = useSelector((state: RootState) => state?.user?.user?.data);
+   const [task, setTask] = useState<any>(null);
+   const [showViewModal, setShowViewModal] = useState(false);
+   const dispatch = useDispatch<AppDispatch>();
+   useEffect(() => {
+      dispatch(fetchMyTasks());
+   }, []);
 
    const dayPropGetter = (date: Date) => {
       if (selectedDate && moment(date).isSame(selectedDate, "day")) {
          return {
-            className: "bg-green-200",
+            className: "bg-green-100",
          };
       }
       return {};
    };
 
    const handleSelectSlot = (slotInfo: any) => {
-      setSelectedDate(slotInfo.start);
-      openModal();
+      if (userData?.role === "manager") {
+         dispatch(handleSelectedDate(slotInfo.start));
+         openModal();
+      }
    };
 
-   const dispatch = useDispatch<AppDispatch>();
-   const openModal = () => {
-      dispatch(handleModal(true));
+   const handleSelectEvent = (task: any, e: any) => {
+      if (e.target.className.includes("rbc-event-content")) {
+         setTask(task);
+         dispatch(handleEditModal({ task, status: false }));
+         setShowViewModal(true);
+      }
    };
-   const closeModal = () => {
-      dispatch(handleModal(false));
+
+   const openModal = () => {
+      dispatch(handleAddModal(true));
+   };
+
+   const handleEdit = () => {
+      dispatch(handleEditModal({ status: true, task }));
+      setShowViewModal(false);
+   };
+   const handleDelete = async () => {
+      try {
+         const id: string = task?._id;
+         await deleteTask(id);
+         toast.success("Task deleted");
+         setShowViewModal(false);
+         dispatch(fetchMyTasks());
+      } catch (error: any) {
+         toast.error("Failed to delete task");
+         console.log(error, "fall");
+      }
+   };
+   const onClose = () => {
+      setShowViewModal(false);
    };
 
    return (
-      <div className="mt-32">
-         <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 500 }}
-            selectable={true}
-            onSelectSlot={handleSelectSlot}
-            dayPropGetter={dayPropGetter}
-         />
-      </div>
+      <>
+         <div className="mt-32">
+            {events && (
+               <Calendar
+                  localizer={localizer}
+                  events={events}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: 500 }}
+                  selectable={true}
+                  onSelectSlot={handleSelectSlot}
+                  dayPropGetter={dayPropGetter}
+                  views={["month", "agenda"]}
+                  onSelectEvent={handleSelectEvent}
+                  className="font-bold uppercase"
+                  eventPropGetter={() => {
+                     return {
+                        className: "bg-green-400",
+                     };
+                  }}
+               />
+            )}
+         </div>
+         {showViewModal && <TaskView handleEdit={handleEdit} handleDelete={handleDelete} onClose={onClose} />}
+      </>
    );
 };
 

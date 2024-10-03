@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUser, userLogin, userSignup } from "../actions/userActions";
-import toast from "react-hot-toast";
+import { fetchEmployees, fetchMyTasks, fetchUser, userLogin, userSignup } from "../actions/userActions";
 
 
 const initialState = {
@@ -10,18 +9,41 @@ const initialState = {
         data: null,
         error: null as string | null
     },
-    modal: {
+    addModal: {
         isOpen: false
-    }
+    },
+    editModal: {
+        isOpen: false,
+        currentTask: null
+    },
+    selectedDate: null,
+    employees: {
+        loading: false,
+        data: null,
+        error: null as string | null
+    },
+    myTasks: {
+        loading: false,
+        data: null,
+        error: null as string | null
+    },
+
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState: initialState,
     reducers: {
-        handleModal: (state, action) => {
-            state.modal.isOpen = action?.payload
-        }
+        handleAddModal: (state, action) => {
+            state.addModal.isOpen = action?.payload
+        },
+        handleEditModal: (state, action) => {
+            state.editModal.isOpen = action?.payload?.status
+            state.editModal.currentTask = action.payload.task
+        },
+        handleSelectedDate: (state, action) => {
+            state.selectedDate = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -62,11 +84,34 @@ const userSlice = createSlice({
                 state.user.error = action?.error?.message || 'Something went wrong';
                 state.user.data = null;
             })
-
+            .addCase(fetchEmployees.pending, (state) => {
+                state.employees.loading = true;
+            })
+            .addCase(fetchEmployees.fulfilled, (state, action) => {
+                state.employees.loading = false;
+                state.employees.data = action.payload.data;
+                state.employees.error = null
+            })
+            .addCase(fetchEmployees.rejected, (state, action) => {
+                state.employees.loading = false;
+                state.employees.error = action.error.message || 'Something went wrong'
+            })
+            .addCase(fetchMyTasks.pending, (state,) => {
+                state.myTasks.loading = true
+            })
+            .addCase(fetchMyTasks.fulfilled, (state, action) => {
+                state.myTasks.loading = false;
+                state.myTasks.data = action.payload.data;
+                state.myTasks.error = null
+            })
+            .addCase(fetchMyTasks.rejected, (state, action) => {
+                state.myTasks.loading = false;
+                state.myTasks.error = action.error.message || 'Something went wrong'
+            })
     }
 })
 
 
-export const { handleModal } = userSlice.actions;
+export const { handleAddModal, handleSelectedDate, handleEditModal } = userSlice.actions;
 
 export default userSlice.reducer;    

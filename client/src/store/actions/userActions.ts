@@ -32,3 +32,21 @@ export const fetchUser = createAsyncThunk('/user/fetch-user', async () => {
     }
 })
 
+export const fetchEmployees = createAsyncThunk('/user/fetch-employees', async (id: string) => {
+    try {
+        const response = await apiClient.get(`/user/fetch-employees/${id}`)
+        return response.data
+    } catch (error: any) {
+        throw new Error(error)
+    }
+})
+
+export const fetchMyTasks = createAsyncThunk('/task/fetch-my-tasks', async () => {
+    try {
+        const response = await apiClient.get('/task/fetch-my-tasks')
+        return response.data
+    } catch (error: any) {
+        throw new Error(error)
+    }
+})
+

@@ -29,7 +29,7 @@ const LoginPage: FC = () => {
       formData.append("password", values.password);
       dispatch(userLogin(formData))
          .unwrap()
-         .then((res) => {
+         .then(() => {
             navigate("/");
          })
          .catch((err: any) => {
@@ -38,32 +38,35 @@ const LoginPage: FC = () => {
    };
 
    return (
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 ">
-         <div className="h-10 w-[600px]">
-            <h1 className="font-bold text-blue-500 text-2xl ">Login</h1>
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
+         <div className="h-10 w-full max-w-md ">
+            <h1 className="font-bold text-green-400 text-3xl text-center ">Login</h1>
          </div>
-         <div className="w-[600px] h-auto p-5 border-2 border-blue-500 rounded-lg">
+         <div className="w-full max-w-md h-auto p-5 border-2 border-green-400 rounded-lg mt-3">
             <div className="mt-5">
                <Formik initialValues={initialState} onSubmit={handleSubmit} validationSchema={loginSchema}>
                   <Form>
-                     <div className="flex flex-col p-5  ">
-                        <Field name="email" placeholder="Email" className="border border-gray-500 h-10 pl-2" />
+                     <div className="flex flex-col p-5">
+                        <Field name="email" placeholder="Email" className="border border-gray-500 h-10 pl-2 rounded-md" />
                         <ErrorMessage name="email" className="text-red-500 h-5" component={"div"} />
-                        <Field name="password" type="password" placeholder="Password" className="border border-gray-500 h-10 pl-2 mt-5" />
+
+                        <Field name="password" type="password" placeholder="Password" className="border border-gray-500 h-10 pl-2 mt-5 rounded-md" />
                         <ErrorMessage name="password" className="text-red-500" component={"div"} />
                      </div>
-                     <div className=" p-5 pt-0 ">
+
+                     <div className="p-5 pt-0">
                         {isLoading ? (
                            <Loading width={"w-full"} />
                         ) : (
-                           <button type="submit" className="bg-blue-500 w-full h-10 text-white">
+                           <button type="submit" className="bg-green-400 w-full h-10 text-white rounded-md">
                               Login
                            </button>
                         )}
                      </div>
+
                      <div className="flex gap-2 justify-center">
                         <p>Don't have an account?</p>
-                        <Link to={"/signup"} className="text-blue-400">
+                        <Link to={"/signup"} className="text-green-400">
                            Signup
                         </Link>
                      </div>

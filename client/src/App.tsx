@@ -19,7 +19,6 @@ function App() {
       dispatch(fetchUser());
    }, []);
 
-   console.log(user, "user");
    return (
       <>
          {" "}

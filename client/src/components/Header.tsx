@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { fetchUser } from "../store/actions/userActions";
-import { Avatar } from "flowbite-react";
 
 const Header: FC = () => {
    const location = useLocation();
@@ -36,12 +35,10 @@ const Header: FC = () => {
                   <>
                      <div
                         className={`${
-                           location.pathname === "/login"
-                              ? "bg-white text-green-400 hover:bg-slate-100"
-                              : "bg-green-400 text-white hover:bg-green-600"
+                           location.pathname === "/" ? "bg-white text-green-400 hover:bg-slate-100" : "bg-green-400 text-white hover:bg-green-600"
                         } h-8 font-bold py-1 px-4 rounded cursor-pointer`}
                      >
-                        <Link to={"/login"}>Login</Link>
+                        <Link to={"/"}>Login</Link>
                      </div>
                      <div
                         className={`${
@@ -53,11 +50,9 @@ const Header: FC = () => {
                   </>
                ) : (
                   <div className="relative">
-                     <div className="flex items-center  cursor-pointer" onClick={toggleDropdown}>
-                        <div className="w-5 p-7">
-                           <Avatar alt="User settings" className="w-full h-full" rounded />
-                        </div>
-                        <span className="text-white hidden sm:inline-block">{userData.fullName}</span>
+                     <div className="flex items-center cursor-pointer" onClick={toggleDropdown}>
+                        <img src={"/no-profile.jpg"} alt="User Avatar" className="w-8 h-8 rounded-full mr-2" />
+                        <span className="text-white hidden sm:inline-block">{userData.fullName}</span> {/* Hide name on small screens */}
                      </div>
 
                      {dropdownOpen && (
